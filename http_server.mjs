@@ -1,6 +1,5 @@
-import express from 'express';
+import http from 'http';
 
-const app = express();
 const port = 8080;
 
 const jokes = [
@@ -11,13 +10,19 @@ const jokes = [
   "Why did the bicycle fall over? Because it was two tired!"
 ];
 
-app.get('/jokes', (req, res) => {
-  const randomIndex = Math.floor(Math.random() * jokes.length);
-  const randomJoke = jokes[randomIndex];
-  res.json({ joke: randomJoke });
+const server = http.createServer((req, res) => {
+  if (req.method === 'GET' && req.url === '/jokes') {
+    const randomIndex = Math.floor(Math.random() * jokes.length);
+    const randomJoke = jokes[randomIndex];
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ joke: randomJoke }));
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+  }
 });
 
-app.listen(port, () => {
-  console.log(`Express server listening at http://localhost:${port}`);
+server.listen(port, () => {
+  console.log(`Simple HTTP server listening at http://localhost:${port}`);
   console.log(`Try: http://localhost:${port}/jokes`);
 });

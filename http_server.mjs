@@ -11,6 +11,9 @@ const jokes = [
 ];
 
 const server = http.createServer((req, res) => {
+  // Log the received method and URL
+  console.log(`Received request: Method=${req.method}, URL=${req.url}`);
+
   if (req.method === 'GET' && req.url === '/jokes') {
     const randomIndex = Math.floor(Math.random() * jokes.length);
     const randomJoke = jokes[randomIndex];
